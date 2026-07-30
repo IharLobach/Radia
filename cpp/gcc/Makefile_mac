@@ -52,7 +52,7 @@ FFTW_TMP_INST  = /tmp/fftw_inst
 # No __MATHEMATICA__, uses ALPHA__LIB__
 # -------------------------------------------------------
 LIBCFLAGS = -arch arm64 -O3 -fPIC \
-            -I$(FFTW_INCLUDE) \
+            $(FFTW_INCLUDE) \
             -I$(RAD_SRC_CORE_DIR) \
             -I$(RAD_SRC_LIB_DIR) \
             -I$(SH_SRC_PARSE_DIR) \
@@ -68,7 +68,7 @@ PGMCFLAGS = -arch arm64 -O3 -fPIC \
             -D__MATHEMATICA__ \
             -I$(ML_ORIG_DIR) \
             -I$(RAD_SRC_ML_DIR) \
-            -I$(FFTW_INCLUDE) \
+            $(FFTW_INCLUDE) \
             -I$(RAD_SRC_CORE_DIR) \
             -I$(RAD_SRC_LIB_DIR) \
             -I$(SH_SRC_PARSE_DIR) \

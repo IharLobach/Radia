@@ -1,6 +1,15 @@
 #from distutils.core import setup, Extension
 from setuptools import setup, Extension
 import os
+import platform
+from pathlib import Path
+
+here = Path(__file__).resolve().parent
+fftw_prefix = os.environ.get('RADIA_FFTW_PREFIX')
+fftw_library_dir = Path(fftw_prefix) / 'lib' if fftw_prefix else here / '../../ext_lib'
+
+def local_path(path):
+    return str((here / path).resolve())
 
 #radia = Extension(
 #    'radia',
@@ -17,10 +26,15 @@ import os
 
 ext_kwargs = {'define_macros': [('MAJOR_VERSION', '1'), ('MINOR_VERSION', '0')],
               #'include_dirs': [os.path.abspath('../src/lib')],
-              'include_dirs': [os.path.abspath('../src/lib'), os.path.abspath('../src/ext/auxparse'), os.path.abspath('../src/core')], #os.path.abspath('/usr/lib/openmpi/include'), os.path.abspath('/usr/lib/openmpi/include/openmpi')], #MPI comp. test #OC03112019 requested by R. Nagler
+              'include_dirs': [local_path('../src/lib'), local_path('../src/ext/auxparse'), local_path('../src/core')], #os.path.abspath('/usr/lib/openmpi/include'), os.path.abspath('/usr/lib/openmpi/include/openmpi')], #MPI comp. test #OC03112019 requested by R. Nagler
               'libraries': ['radia', 'm', 'fftw'],
-              'library_dirs': [os.path.abspath('../gcc'), os.path.abspath('../../ext_lib')],
-              'sources': [os.path.abspath('../src/clients/python/radpy.cpp')]} 
+              'library_dirs': [local_path('../gcc'), str(fftw_library_dir.resolve())],
+              'sources': [local_path('../src/clients/python/radpy.cpp')]}
+
+if platform.system() == 'Darwin' and platform.machine() == 'arm64':
+    ext_kwargs.update({
+        'extra_compile_args': ['-arch', 'arm64', '-Wno-narrowing'],
+        'extra_link_args': ['-arch', 'arm64']})
 
 if 'MODE' in os.environ: 
     sMode = str(os.environ['MODE'])

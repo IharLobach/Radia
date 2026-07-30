@@ -1,0 +1,7 @@
+/build/
+/cpp/gcc/*.o
+/cpp/gcc/libradia.a
+/cpp/py/build/
+/cpp/py/*.egg-info/
+/env/radia_python/__pycache__/
+__pycache__/

@@ -2,7 +2,7 @@
 set -eu
 
 project_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-python_bin=${PYTHON_BIN:-/opt/homebrew/Caskroom/miniconda/base/envs/env/bin/python}
+python_bin=${PYTHON_BIN:-}
 build_dir="$project_dir/build/macos-arm64"
 fftw_source_dir="$build_dir/fftw-source"
 fftw_prefix="$build_dir/fftw-prefix"
@@ -13,8 +13,13 @@ if [ "$(uname -m)" != "arm64" ]; then
     exit 1
 fi
 
+if [ -z "$python_bin" ]; then
+    echo "PYTHON_BIN must name the Python interpreter to use." >&2
+    exit 1
+fi
+
 if [ ! -x "$python_bin" ]; then
-    echo "Python interpreter not found: $python_bin" >&2
+    echo "Python interpreter not found or not executable: $python_bin" >&2
     exit 1
 fi
 
